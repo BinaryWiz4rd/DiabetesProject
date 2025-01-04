@@ -7,6 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.diabetesapp.R
 
+// wykresik z cukrami
+// https://www.youtube.com/watch?v=9gfp_nT8p7g
+// https://github.com/PhilJay/MPAndroidChart
+//https://www.youtube.com/watch?v=ufaK_Hd6BpI
 class ChartFragment : Fragment() {
 
     override fun onCreateView(
