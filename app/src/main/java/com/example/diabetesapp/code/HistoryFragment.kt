@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.diabetesapp.R
-
+// historia dodanych poziomów cukru (na dzień), zobaczyc w firebaseauth git
 class HistoryFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

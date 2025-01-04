@@ -15,4 +15,10 @@ class CalculatorFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_calculator, container, false)
     }
+
+    //https://cukrowy.pl/
+//    Od całkowitej ilości węglowodanów zawartych w 100 g produktu odejmuje się ilość błonnika
+//    pokarmowego, a następnie dzieli przez 10. Pamiętać przy tym trzeba jednak o gramaturze
+//    realnie spożywanej porcji. Jeśli zatem jest to przykładowo 200 gramów, całość trzeba
+//    przemnożyć przez 2.
 }
