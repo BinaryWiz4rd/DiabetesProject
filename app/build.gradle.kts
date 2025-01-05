@@ -50,4 +50,14 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    //MPAndroidChart: https://github.com/PhilJay/MPAndroidChart
+    //a single implementation does not work even tho its all the same lol
+//    implementation(libs.mpandroidchart)
+//    implementation(libs.philjay.mpandroidchart)
+//    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0'")
+//    implementation(libs.diabetesproject)
+
+    implementation(libs.graphview)
+
 }
