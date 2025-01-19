@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import android.os.Bundle
+import android.util.Log
 import com.example.diabetesapp.R
 import com.example.diabetesapp.databinding.ActivityMainBinding
 
@@ -26,8 +27,21 @@ class MainActivity : AppCompatActivity() {
                 R.id.history -> replaceFragment(HistoryFragment())
                 R.id.calculator -> replaceFragment(CalculatorFragment())
                 R.id.library -> replaceFragment(LibraryFragment())
+                R.id.fab -> {
+                    val currentFragment = supportFragmentManager.findFragmentById(R.id.frame_layout)
+                    if (currentFragment is ChartFragment) {
+                        currentFragment.showAddDataPointDialog()
+                    }
+                }
             }
             true
+        }
+
+        binding.bottomNavigationView.setOnClickListener {
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.frame_layout)
+            if (currentFragment is ChartFragment) {
+                currentFragment.showAddDataPointDialog()
+            }
         }
     }
 
