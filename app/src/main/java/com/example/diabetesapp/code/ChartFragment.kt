@@ -1,5 +1,6 @@
 package com.example.diabetesapp.code
 
+import GlucoseMeasurement
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.diabetesapp.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
@@ -71,9 +74,38 @@ class ChartFragment : Fragment() {
             .show()
     }
 
-
     private fun addDataPoint(x: Double, y: Double) {
-        glucoseMeasurements.appendData(DataPoint(x, y), true, 50)
-        nextXValue = maxOf(nextXValue, x + 1) // Update nextXValue to avoid overlap
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val measurement = GlucoseMeasurement(
+            value = y,
+            time = x,
+            userId = userId
+        )
+
+        val db = FirebaseFirestore.getInstance()
+        db.collection("glucose_measurements").add(measurement)
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Data point added", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Failed to add data point", Toast.LENGTH_SHORT).show()
+            }
+
+        fun updateMeasurement(measurement: GlucoseMeasurement, newValue: Double, newTime: Double) {
+            val db = FirebaseFirestore.getInstance()
+            val updatedData = mapOf(
+                "value" to newValue,
+                "time" to newTime
+            )
+            db.collection("glucose_measurements").document(measurement.id).update(updatedData)
+                .addOnSuccessListener {
+                    Toast.makeText(requireContext(), "Measurement updated", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(requireContext(), "Failed to update measurement", Toast.LENGTH_SHORT).show()
+                }
+        }
+
     }
+
 }
