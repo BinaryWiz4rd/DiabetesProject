@@ -1,10 +1,13 @@
 package com.example.diabetesapp.code
 
-import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.diabetesapp.R
 import com.jjoe64.graphview.GraphView
@@ -14,8 +17,9 @@ import com.jjoe64.graphview.series.LineGraphSeries
 class ChartFragment : Fragment() {
 
     private lateinit var lineGraphView: GraphView
+    private lateinit var glucoseMeasurements: LineGraphSeries<DataPoint>
+    private var nextXValue = 0.0 // Track the next X value for the graph
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,21 +34,10 @@ class ChartFragment : Fragment() {
     }
 
     private fun setupGraph() {
-        val glucoseMeasurements = LineGraphSeries(
-            arrayOf(
-                DataPoint(0.0, 1.0),
-                DataPoint(1.0, 3.0),
-                DataPoint(2.0, 4.0),
-                DataPoint(3.0, 9.0),
-                DataPoint(4.0, 6.0),
-                DataPoint(5.0, 3.0),
-                DataPoint(6.0, 6.0),
-                DataPoint(7.0, 1.0),
-                DataPoint(8.0, 2.0)
-            )
-        )
-
-        lineGraphView.animate()
+        glucoseMeasurements = LineGraphSeries()
+        lineGraphView.viewport.setMinX(0.0)
+        lineGraphView.viewport.setMaxX(24.0)
+        lineGraphView.viewport.setMinY(0.0)
         lineGraphView.viewport.isScrollable = true
         lineGraphView.viewport.isScalable = true
         lineGraphView.viewport.setScalableY(true)
@@ -52,5 +45,35 @@ class ChartFragment : Fragment() {
         glucoseMeasurements.color = resources.getColor(R.color.blue_dark, null)
 
         lineGraphView.addSeries(glucoseMeasurements)
+    }
+
+    fun showAddDataPointDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_data_point, null)
+
+        val inputGlucose = dialogView.findViewById<EditText>(R.id.input_glucose)
+        val inputTime = dialogView.findViewById<EditText>(R.id.input_time)
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Add Data Point")
+            .setView(dialogView)
+            .setPositiveButton("Add") { _, _ ->
+                val glucoseValue = inputGlucose.text.toString().toDoubleOrNull()
+                val timeValue = inputTime.text.toString().toDoubleOrNull()
+
+                if (glucoseValue != null && timeValue != null) {
+                    addDataPoint(timeValue, glucoseValue)
+                } else {
+                    Toast.makeText(requireContext(), "Invalid input values", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .create()
+            .show()
+    }
+
+
+    private fun addDataPoint(x: Double, y: Double) {
+        glucoseMeasurements.appendData(DataPoint(x, y), true, 50)
+        nextXValue = maxOf(nextXValue, x + 1) // Update nextXValue to avoid overlap
     }
 }
