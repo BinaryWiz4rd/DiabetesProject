@@ -43,6 +43,14 @@ class SignUpActivity : AppCompatActivity() {
                         if (task.isSuccessful) {
                             Toast.makeText(this, "SignUp Successful", Toast.LENGTH_SHORT).show()
                             startActivity(Intent(this, LoginActivity::class.java))
+
+
+                            val firebaseUser = auth.currentUser ?: throw Exception("User creation failed.")
+
+                            val newUser = User(
+                                id = firebaseUser.uid,
+                                mail = firebaseUser.email ?: "No email"
+                            )
                         } else {
                             Toast.makeText(this,"SignUp Failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                         }
