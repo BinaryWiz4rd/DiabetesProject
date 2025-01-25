@@ -1,0 +1,206 @@
+[33mcommit 69d8f2388c8bcf5ac02d0b0f791858b62ce5d307[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mrecycling[m[33m, [m[1;32mlala[m[33m)[m
+Merge: 93a09c3 5949f0d
+Author: BinaryWiz4rd <164073863+BinaryWiz4rd@users.noreply.github.com>
+Date:   Fri Jan 24 10:25:59 2025 +0100
+
+    Merge pull request #13 from BinaryWiz4rd/collectionAdd
+    
+    Added calculator
+
+[33mcommit 5949f0de2245a9a3f6a37b8850cd30c3c849ef05[m[33m ([m[1;31morigin/collectionAdd[m[33m, [m[1;32mcollectionAdd[m[33m)[m
+Author: BinaryWiz4rd <278437@student.pwr.edu.pl>
+Date:   Fri Jan 24 10:25:33 2025 +0100
+
+    Added calculator
+
+[33mcommit 93a09c31d7717162c91e49166120be0aad1bdb01[m
+Merge: 09287a9 8e28e69
+Author: BinaryWiz4rd <164073863+BinaryWiz4rd@users.noreply.github.com>
+Date:   Tue Jan 21 16:16:02 2025 +0100
+
+    Merge pull request #12 from BinaryWiz4rd/collection
+    
+    added user addition
+
+[33mcommit 8e28e6928c54ed5a738232bd3fb0a5ce925d9fc7[m[33m ([m[1;31morigin/collection[m[33m, [m[1;32mcollection[m[33m)[m
+Author: BinaryWiz4rd <278437@student.pwr.edu.pl>
+Date:   Tue Jan 21 16:14:36 2025 +0100
+
+    added user addition
+
+[33mcommit 09287a9b316ecaa1e2c08b1dd2c18a55fbc84319[m
+Merge: 147ea35 7219508
+Author: BinaryWiz4rd <164073863+BinaryWiz4rd@users.noreply.github.com>
+Date:   Sun Jan 19 22:45:39 2025 +0100
+
+    Merge pull request #11 from BinaryWiz4rd/recyclerView
+    
+    Added recyclerView
+
+[33mcommit 721950896cc82d5725c99d8a940d46c2ebd70f46[m[33m ([m[1;31morigin/recyclerView[m[33m, [m[1;32mrecyclerView[m[33m)[m
+Author: BinaryWiz4rd <278437@student.pwr.edu.pl>
+Date:   Sun Jan 19 22:45:05 2025 +0100
+
+    Added recyclerView
+
+[33mcommit 147ea355ba88d52450f18e028c35802009106a44[m
+Merge: 34144e0 1ad3c18
+Author: BinaryWiz4rd <164073863+BinaryWiz4rd@users.noreply.github.com>
+Date:   Sun Jan 19 18:51:20 2025 +0100
+
+    Merge pull request #10 from BinaryWiz4rd/work
+    
+    work work
+
+[33mcommit 1ad3c1811fd9b926be4c1ff823170f1883cd36a5[m[33m ([m[1;31morigin/work[m[33m, [m[1;32mwork[m[33m)[m
+Author: BinaryWiz4rd <278437@student.pwr.edu.pl>
+Date:   Sun Jan 19 18:51:00 2025 +0100
+
+    work work
+
+[33mcommit 34144e0502661343aa86f1caf157dc5ce1585ba1[m
+Merge: 0639ec7 1c773fb
+Author: BinaryWiz4rd <164073863+BinaryWiz4rd@users.noreply.github.com>
+Date:   Sun Jan 5 16:13:33 2025 +0100
+
+    Merge pull request #9 from BinaryWiz4rd/chart
+    
+    added graph (hardcoded)
+
+[33mcommit 1c773fb884d8952a18fff1ef42ed1e20eaae48f6[m[33m ([m[1;31morigin/chart[m[33m, [m[1;32mchart[m[33m)[m
+Author: BinaryWiz4rd <278437@student.pwr.edu.pl>
+Date:   Sun Jan 5 16:12:17 2025 +0100
+
+    added graph (hardcoded)
+
+[33mcommit 0639ec77cd7619da3fa139ef2427022aa3244d1c[m
+Merge: 0e77eba ba5237a
+Author: BinaryWiz4rd <164073863+BinaryWiz4rd@users.noreply.github.com>
+Date:   Sat Jan 4 22:15:29 2025 +0100
+
+    Merge pull request #8 from BinaryWiz4rd/rah
+    
+    added instructions for the next coding sesh
+
+[33mcommit ba5237a01615c57591d599fedd0bd8a0a67a095e[m[33m ([m[1;31morigin/rah[m[33m, [m[1;32mrah[m[33m)[m
+Author: BinaryWiz4rd <278437@student.pwr.edu.pl>
+Date:   Sat Jan 4 22:15:00 2025 +0100
+
+    added instructions for the next coding sesh
+
+[33mcommit 0e77eba3097fe53b972797fcef56d4f1c54535c1[m
+Merge: 0b08139 e43fc23
+Author: BinaryWiz4rd <164073863+BinaryWiz4rd@users.noreply.github.com>
+Date:   Sat Jan 4 18:49:03 2025 +0100
+
+    Merge pull request #7 from BinaryWiz4rd/mainlayout
+    
+    added bottom menu
+
+[33mcommit e43fc23ecca00bd72344b64510404dc43c8091d1[m[33m ([m[1;31morigin/mainlayout[m[33m, [m[1;32mmainlayout[m[33m)[m
+Author: BinaryWiz4rd <278437@student.pwr.edu.pl>
+Date:   Sat Jan 4 18:48:22 2025 +0100
+
+    added bottom menu
+
+[33mcommit 0b081398ec4728fbd3fcdb18ee3eb545eb1b4b11[m
+Merge: 91c07cb 4ff6bae
+Author: BinaryWiz4rd <164073863+BinaryWiz4rd@users.noreply.github.com>
+Date:   Thu Jan 2 11:33:20 2025 +0100
+
+    Merge pull request #6 from BinaryWiz4rd/forgotPassword
+    
+    added forgotPassword function
+
+[33mcommit 4ff6bae660c05718dcfdb2e735d3623e3e4ed8a7[m[33m ([m[1;31morigin/forgotPassword[m[33m, [m[1;32mforgotPassword[m[33m)[m
+Author: BinaryWiz4rd <278437@student.pwr.edu.pl>
+Date:   Thu Jan 2 11:31:21 2025 +0100
+
+    Added forgotPassword function
+
+[33mcommit 91c07cb7e0fdab8bcbe6d7bf0782f6871abfae77[m
+Merge: eab98f6 64f62de
+Author: BinaryWiz4rd <164073863+BinaryWiz4rd@users.noreply.github.com>
+Date:   Wed Dec 25 18:15:11 2024 +0100
+
+    Merge pull request #5 from BinaryWiz4rd/login
+    
+    finished register and login
+
+[33mcommit 64f62de7e4341d14d1ba61f1e9b325f2480c94c3[m[33m ([m[1;31morigin/login[m[33m, [m[1;32mlogin[m[33m)[m
+Author: BinaryWiz4rd <278437@student.pwr.edu.pl>
+Date:   Wed Dec 25 18:14:38 2024 +0100
+
+    finished register and login
+
+[33mcommit eab98f6d20022434a79e7a5686725dd093116b28[m[33m ([m[1;32msignup[m[33m)[m
+Merge: 3af13cc 00d8ad7
+Author: BinaryWiz4rd <164073863+BinaryWiz4rd@users.noreply.github.com>
+Date:   Wed Dec 25 13:25:31 2024 +0100
+
+    Merge pull request #4 from BinaryWiz4rd/signup
+    
+    added code to signup activity
+
+[33mcommit 00d8ad7629f198b947e5604b90961c38f9611ce5[m[33m ([m[1;31morigin/signup[m[33m)[m
+Author: BinaryWiz4rd <278437@student.pwr.edu.pl>
+Date:   Wed Dec 25 13:25:08 2024 +0100
+
+    added code to signup activity
+
+[33mcommit 3af13ccf666bdb5c23c26ddcd265a35df0386cda[m
+Merge: 06b5363 7ff8100
+Author: BinaryWiz4rd <164073863+BinaryWiz4rd@users.noreply.github.com>
+Date:   Wed Dec 25 13:11:22 2024 +0100
+
+    Merge pull request #3 from BinaryWiz4rd/database
+    
+    connected firebase
+
+[33mcommit 7ff8100e2ebd58a97dc5c97784fed15537d7699a[m[33m ([m[1;31morigin/database[m[33m, [m[1;32mdatabase[m[33m)[m
+Author: BinaryWiz4rd <278437@student.pwr.edu.pl>
+Date:   Wed Dec 25 13:10:42 2024 +0100
+
+    connected firebase
+
+[33mcommit 06b53632d31245e284d984b91d00bbd876266458[m
+Merge: d46dd7e fa1a0bc
+Author: BinaryWiz4rd <164073863+BinaryWiz4rd@users.noreply.github.com>
+Date:   Tue Dec 24 15:43:39 2024 +0100
+
+    Merge pull request #2 from BinaryWiz4rd/firebase
+    
+    added login, register, and main layouts
+
+[33mcommit fa1a0bc4e37e81b40df6338cc6f247e03f6bd39e[m[33m ([m[1;31morigin/firebase[m[33m, [m[1;32mfirebase[m[33m)[m
+Author: BinaryWiz4rd <278437@student.pwr.edu.pl>
+Date:   Tue Dec 24 15:43:03 2024 +0100
+
+    added login, register, and main layouts
+
+[33mcommit d46dd7e3e1b3ff3d8c92546abfaab41410f77fb0[m
+Merge: 129b988 ac71177
+Author: BinaryWiz4rd <164073863+BinaryWiz4rd@users.noreply.github.com>
+Date:   Tue Dec 24 13:31:47 2024 +0100
+
+    Merge pull request #1 from BinaryWiz4rd/start
+    
+    added loginActivity
+
+[33mcommit ac71177067aa5b4627bfd2b84a04eea99c11d43c[m[33m ([m[1;31morigin/start[m[33m, [m[1;32mstart[m[33m)[m
+Author: BinaryWiz4rd <278437@student.pwr.edu.pl>
+Date:   Tue Dec 24 13:31:01 2024 +0100
+
+    added loginActivity
+
+[33mcommit 129b9880df8a761eaddbebf39f61f325f0320161[m
+Author: BinaryWiz4rd <278437@student.pwr.edu.pl>
+Date:   Tue Dec 24 13:11:19 2024 +0100
+
+    initial project setup
+
+[33mcommit a371af37ec9cea3444886d622861543dae2a7619[m
+Author: BinaryWiz4rd <164073863+BinaryWiz4rd@users.noreply.github.com>
+Date:   Tue Dec 24 13:07:53 2024 +0100
+
+    Initial commit
