@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/editTextGlucose"
+        android:id="@+id/input_glucose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Glucose Measurement"
+        android:hint="Enter glucose measurement (Y)"
         android:inputType="numberDecimal" />
 
     <EditText
-        android:id="@+id/editTextTime"
+        android:id="@+id/input_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Time (e.g., 12.0 for 12:00 PM)"
-        android:inputType="numberDecimal" />
+        android:hint="Enter time (X)"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="8dp" />
 
 </LinearLayout>
