@@ -14,4 +14,10 @@
     <color name="blue_dark">#2A465B</color>
     <color name="red">#A25772</color>
 
+    <!--more blueee-->
+    <color name="blue_50">#E3F2FD</color>
+    <color name="blue_700">#1976D2</color>
+    <color name="blue_900">#0D47A1</color>
+
+
 </resources>
