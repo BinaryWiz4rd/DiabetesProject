@@ -18,30 +18,25 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        replaceFragment(ChartFragment())
+        replaceFragment(MeasurementsFragment())
         binding.bottomNavigationView.background = null
 
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.chart -> replaceFragment(ChartFragment())
+                R.id.measurements -> replaceFragment(MeasurementsFragment())
                 R.id.history -> replaceFragment(HistoryFragment())
                 R.id.calculator -> replaceFragment(CalculatorFragment())
                 R.id.library -> replaceFragment(LibraryFragment())
-                R.id.fab -> {
-                    val currentFragment = supportFragmentManager.findFragmentById(R.id.frame_layout)
-                    if (currentFragment is ChartFragment) {
-                        currentFragment.showAddDataPointDialog()
-                    }
-                }
+                //R.id.fab ->
             }
             true
         }
 
         binding.bottomNavigationView.setOnClickListener {
             val currentFragment = supportFragmentManager.findFragmentById(R.id.frame_layout)
-            if (currentFragment is ChartFragment) {
-                currentFragment.showAddDataPointDialog()
-            }
+            //if (currentFragment is MeasurementsFragment) {
+             //   currentFragment.showAddDataPointDialog()
+            //}
         }
     }
 

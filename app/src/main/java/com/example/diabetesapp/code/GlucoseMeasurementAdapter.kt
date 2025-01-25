@@ -1,15 +1,11 @@
 package com.example.diabetesapp.code
 
-import GlucoseMeasurement
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diabetesapp.R
-import com.google.firebase.firestore.FirebaseFirestore
 
 class GlucoseMeasurementAdapter(
     private val measurements: List<GlucoseMeasurement>,
@@ -35,22 +31,6 @@ class GlucoseMeasurementAdapter(
         holder.itemView.setOnClickListener {
             onItemClick(measurement)
         }
-
-        holder.itemView.setOnLongClickListener {
-            deleteMeasurement(measurement, holder.itemView.context)
-            true
-        }
-    }
-
-    private fun deleteMeasurement(measurement: GlucoseMeasurement, context: Context) {
-        val db = FirebaseFirestore.getInstance()
-        db.collection("glucose_measurements").document(measurement.id).delete()
-            .addOnSuccessListener {
-                Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener {
-                Toast.makeText(context, "Failed to delete", Toast.LENGTH_SHORT).show()
-            }
     }
 
     override fun getItemCount() = measurements.size

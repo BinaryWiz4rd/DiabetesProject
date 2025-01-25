@@ -1,18 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue_dark"
-    tools:context=".code.CalculatorFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/blue_light"
+    android:padding="16dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Calculator"
-        android:gravity="center"
-        android:textSize="30sp"
-        android:textColor="@color/white"/>
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="24dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="12dp"
+        android:backgroundTint="@color/white">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Carbohydrate Calculator"
+                android:textSize="24sp"
+                android:textColor="@color/blue_dark"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:layout_marginBottom="24dp" />
+
+            <EditText
+                android:id="@+id/carb_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Total Carbohydrates (g)"
+                android:inputType="numberDecimal"
+                android:backgroundTint="@color/blue_medium"
+                android:textColor="@color/blue_dark"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="sans-serif" />
+
+            <EditText
+                android:id="@+id/fiber_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Dietary Fiber (g)"
+                android:inputType="numberDecimal"
+                android:backgroundTint="@color/blue_medium"
+                android:textColor="@color/blue_dark"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="sans-serif" />
+
+            <EditText
+                android:id="@+id/weight_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Portion Weight (g)"
+                android:inputType="numberDecimal"
+                android:backgroundTint="@color/blue_medium"
+                android:textColor="@color/blue_dark"
+                android:padding="16dp"
+                android:layout_marginBottom="24dp"
+                android:fontFamily="sans-serif" />
+
+            <Button
+                android:id="@+id/calculate_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Calculate"
+                android:backgroundTint="@color/blue_dark"
+                android:textColor="@android:color/white"
+                android:padding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                android:elevation="8dp"
+                android:layout_marginBottom="24dp" />
+
+            <TextView
+                android:id="@+id/result_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Result will appear here"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:fontFamily="sans-serif-light"
+                android:paddingTop="16dp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>
