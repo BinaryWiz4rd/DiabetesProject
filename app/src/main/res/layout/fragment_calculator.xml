@@ -1,91 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blue_dark"
-    android:padding="16dp">
+    tools:context=".code.CalculatorFragment">
 
-    <LinearLayout
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:text="Calculator"
         android:gravity="center"
-        android:padding="16dp">
+        android:textSize="30sp"
+        android:textColor="@color/white"/>
 
-        <!-- Title -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Carbohydrate Calculator"
-            android:textSize="24sp"
-            android:textColor="@color/white"
-            android:layout_marginBottom="20dp"
-            android:fontFamily="sans-serif-medium" />
-
-        <!-- Input for Total Carbohydrates -->
-        <EditText
-            android:id="@+id/totalCarbsInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Total carbs (per 100g)"
-            android:inputType="numberDecimal"
-            android:padding="12dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:layout_marginBottom="12dp"
-            android:elevation="4dp" />
-
-        <!-- Input for Fiber -->
-        <EditText
-            android:id="@+id/fiberInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Fiber (per 100g)"
-            android:inputType="numberDecimal"
-            android:padding="12dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:layout_marginBottom="12dp"
-            android:elevation="4dp" />
-
-        <!-- Input for Portion Size -->
-        <EditText
-            android:id="@+id/portionSizeInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Portion size (g)"
-            android:inputType="numberDecimal"
-            android:padding="12dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:layout_marginBottom="20dp"
-            android:elevation="4dp" />
-
-        <!-- Button -->
-        <Button
-            android:id="@+id/calculateButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Calculate"
-            android:padding="12dp"
-            android:textColor="@color/blue_dark"
-            android:backgroundTint="@color/white"
-            android:fontFamily="sans-serif-medium"
-            android:layout_marginBottom="20dp"
-            android:elevation="6dp" />
-
-        <!-- Result -->
-        <TextView
-            android:id="@+id/resultTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Effective Carbs: 0 g"
-            android:textSize="18sp"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:padding="12dp"
-            android:background="@drawable/calculator_background"
-            android:layout_marginTop="10dp"
-            android:elevation="4dp" />
-    </LinearLayout>
-</ScrollView>
+</FrameLayout>

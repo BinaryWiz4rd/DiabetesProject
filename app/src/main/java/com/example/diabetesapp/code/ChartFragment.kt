@@ -21,7 +21,7 @@ class ChartFragment : Fragment() {
 
     private lateinit var lineGraphView: GraphView
     private lateinit var glucoseMeasurements: LineGraphSeries<DataPoint>
-    private var nextXValue = 0.0
+    private var nextXValue = 0.0 // Track the next X value for the graph
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,8 +53,8 @@ class ChartFragment : Fragment() {
     fun showAddDataPointDialog() {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_data_point, null)
 
-        val inputGlucose = dialogView.findViewById<EditText>(R.id.editTextGlucose)
-        val inputTime = dialogView.findViewById<EditText>(R.id.editTextTime)
+        val inputGlucose = dialogView.findViewById<EditText>(R.id.input_glucose)
+        val inputTime = dialogView.findViewById<EditText>(R.id.input_time)
 
         AlertDialog.Builder(requireContext())
             .setTitle("Add Data Point")
@@ -75,7 +75,7 @@ class ChartFragment : Fragment() {
     }
 
     private fun addDataPoint(x: Double, y: Double) {
-        val userId = FirebaseAuth.getInstance().currentUser ?.uid ?: return
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val measurement = GlucoseMeasurement(
             value = y,
             time = x,
@@ -86,12 +86,11 @@ class ChartFragment : Fragment() {
         db.collection("glucose_measurements").add(measurement)
             .addOnSuccessListener {
                 Toast.makeText(requireContext(), "Data point added", Toast.LENGTH_SHORT).show()
-                glucoseMeasurements.appendData(DataPoint(x, y), true, 24)
             }
             .addOnFailureListener {
                 Toast.makeText(requireContext(), "Failed to add data point", Toast.LENGTH_SHORT).show()
             }
-    }
+
         fun updateMeasurement(measurement: GlucoseMeasurement, newValue: Double, newTime: Double) {
             val db = FirebaseFirestore.getInstance()
             val updatedData = mapOf(
@@ -109,3 +108,4 @@ class ChartFragment : Fragment() {
 
     }
 
+}

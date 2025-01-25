@@ -9,27 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.diabetesapp.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-
-class FirestoreClass {
-    private val firestore = FirebaseFirestore.getInstance()
-
-    fun registerOrUpdateUser(user: User) {
-        firestore.collection("users")
-            .document(user.id)
-            .set(user)
-            .addOnSuccessListener {
-                println("User successfully added to Firestore")
-            }
-            .addOnFailureListener { e ->
-                println("Error adding user to Firestore: ${e.message}")
-            }
-    }
-}
-
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -53,51 +32,34 @@ class SignUpActivity : AppCompatActivity() {
             val user = signupEmail.text.toString().trim()
             val pass = signupPassword.text.toString().trim()
 
-            if (user.isEmpty()) {
+            if (user.isEmpty()){
                 signupEmail.error = "Email cannot be empty"
-                return@setOnClickListener
             }
-            if (pass.isEmpty()) {
+            if (pass.isEmpty()){
                 signupPassword.error = "Password cannot be empty"
-                return@setOnClickListener
-            }
+            } else {
+                auth.createUserWithEmailAndPassword(user, pass)
+                    .addOnCompleteListener {task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(this, "SignUp Successful", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this, LoginActivity::class.java))
 
-            auth.createUserWithEmailAndPassword(user, pass)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Toast.makeText(this, "SignUp Successful", Toast.LENGTH_SHORT).show()
-                        val firebaseUser = auth.currentUser ?: throw Exception("User creation failed.")
 
-                        val newUser = User(
-                            id = firebaseUser.uid,
-                            mail = firebaseUser.email ?: "No email"
-                        )
-                        saveUserToFirestore(newUser)
-                        startActivity(Intent(this, LoginActivity::class.java))
-                    } else {
-                        Toast.makeText(this, "SignUp Failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                            val firebaseUser = auth.currentUser ?: throw Exception("User creation failed.")
+
+                            val newUser = User(
+                                id = firebaseUser.uid,
+                                mail = firebaseUser.email ?: "No email"
+                            )
+                        } else {
+                            Toast.makeText(this,"SignUp Failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                        }
                     }
-                }
-        }
-
-        loginRedirectText.setOnClickListener {
-            startActivity(Intent(this, LoginActivity::class.java))
-        }
-    }
-
-    private fun saveUserToFirestore(user: User) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val firestoreClass = FirestoreClass()
-                firestoreClass.registerOrUpdateUser(user)
-                runOnUiThread {
-                    Toast.makeText(this@SignUpActivity, "User data saved successfully!", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                runOnUiThread {
-                    Toast.makeText(this@SignUpActivity, "Failed to save user data: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
             }
+        }
+
+        loginRedirectText.setOnClickListener{
+            startActivity(Intent(this,LoginActivity::class.java))
         }
     }
 }
