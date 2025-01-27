@@ -11,7 +11,7 @@ This application is designed to help users manage their diabetes by tracking glu
 
 ## Setup Instructions
 1. Clone the repository:
-   git clone https://github.com/yourusername/diabetes-management-app.git
+   git clone https://github.com/BinaryWiz4rd/DiabetesProject.git
 
 2. Open the project in Android Studio.
   
