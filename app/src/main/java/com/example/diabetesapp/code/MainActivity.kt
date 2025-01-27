@@ -15,6 +15,9 @@ import com.example.diabetesapp.R
 import com.example.diabetesapp.databinding.ActivityMainBinding
 import java.util.concurrent.TimeUnit
 
+/**
+ * Main activity that serves as the entry point for the application.
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -42,14 +45,7 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        binding.bottomNavigationView.setOnClickListener {
-            val currentFragment = supportFragmentManager.findFragmentById(R.id.frame_layout)
-            // if (currentFragment is MeasurementsFragment) {
-            //     currentFragment.showAddDataPointDialog()
-            // }
-        }
-
-        // Schedule daily notifications
+        // schedule daily notifications
         scheduleDailyNotifications()
     }
 

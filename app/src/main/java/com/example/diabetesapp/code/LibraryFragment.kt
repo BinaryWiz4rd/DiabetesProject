@@ -7,6 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.diabetesapp.R
 
+/**
+ * Fragment for displaying educational resources related to diabetes.
+ */
 class LibraryFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -14,5 +17,4 @@ class LibraryFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_library, container, false)
     }
-
 }

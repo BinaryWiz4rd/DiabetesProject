@@ -10,6 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.diabetesapp.R
 import com.google.firebase.auth.FirebaseAuth
 
+/**
+ * Activity for user registration.
+ */
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
@@ -32,34 +35,26 @@ class SignUpActivity : AppCompatActivity() {
             val user = signupEmail.text.toString().trim()
             val pass = signupPassword.text.toString().trim()
 
-            if (user.isEmpty()){
+            if (user.isEmpty()) {
                 signupEmail.error = "Email cannot be empty"
             }
-            if (pass.isEmpty()){
+            if (pass.isEmpty()) {
                 signupPassword.error = "Password cannot be empty"
             } else {
                 auth.createUserWithEmailAndPassword(user, pass)
-                    .addOnCompleteListener {task ->
-                        if (task.isSuccessful) {
-                            Toast.makeText(this, "SignUp Successful", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this, LoginActivity::class.java))
-
-
-                            val firebaseUser = auth.currentUser ?: throw Exception("User creation failed.")
-
-                            val newUser = User(
-                                id = firebaseUser.uid,
-                                mail = firebaseUser.email ?: "No email"
-                            )
-                        } else {
-                            Toast.makeText(this,"SignUp Failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                        }
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this, "SignUp Successful", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this, LoginActivity::class.java))
+                    } else {
+                        Toast.makeText(this, "SignUp Failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                     }
+                }
             }
         }
 
-        loginRedirectText.setOnClickListener{
-            startActivity(Intent(this,LoginActivity::class.java))
+        loginRedirectText.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 }
