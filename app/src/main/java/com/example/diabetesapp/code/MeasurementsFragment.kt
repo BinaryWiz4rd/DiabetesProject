@@ -5,11 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diabetesapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MeasurementsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
@@ -33,21 +39,36 @@ class MeasurementsFragment : Fragment() {
 
     private fun fetchMeasurements() {
         val db = FirebaseFirestore.getInstance()
-        val userId = FirebaseAuth.getInstance().currentUser ?.uid
-        db.collection("glucose_measurements")
-            .whereEqualTo("userId", userId)
-            .get()
-            .addOnSuccessListener { documents ->
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+        if (userId == null) {
+            // Handle the case where the user is not logged in
+            return
+        }
+
+        // Launch a coroutine to fetch measurements
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val querySnapshot: QuerySnapshot = withContext(Dispatchers.IO) {
+                    db.collection("glucose_measurements")
+                        .whereEqualTo("userId", userId)
+                        .get()
+                        .await() // Await the task to get the actual QuerySnapshot
+                }
+
                 measurements.clear()
-                for (document in documents) {
+                for (document in querySnapshot.documents) {
                     val measurement = document.toObject(GlucoseMeasurement::class.java)
-                    measurement.id = document.id // Set the document ID
-                    measurements.add(measurement)
+                    if (measurement != null) {
+                        measurement.id = document.id // Set the document ID
+                        measurements.add(measurement)
+                    }
                 }
                 adapter.notifyDataSetChanged() // Notify adapter of data change
+            } catch (exception: Exception) {
+                // Handle the error (e.g., show a toast or log the error)
+                exception.printStackTrace()
             }
-            .addOnFailureListener { exception ->
-                // Handle the error
-            }
+        }
     }
 }
