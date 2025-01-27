@@ -17,6 +17,9 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * Fragment for displaying glucose measurements.
+ */
 class MeasurementsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: GlucoseMeasurementAdapter
@@ -30,7 +33,7 @@ class MeasurementsFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = GlucoseMeasurementAdapter(measurements) { measurement ->
-            // Handle item click (e.g., show details or edit)
+            // sth here
         }
         recyclerView.adapter = adapter
         fetchMeasurements()
@@ -39,34 +42,33 @@ class MeasurementsFragment : Fragment() {
 
     private fun fetchMeasurements() {
         val db = FirebaseFirestore.getInstance()
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        val userId = FirebaseAuth.getInstance().currentUser ?.uid
 
         if (userId == null) {
-            // Handle the case where the user is not logged in
             return
         }
 
-        // Launch a coroutine to fetch measurements
+        // launch a coroutine to fetch measurements
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val querySnapshot: QuerySnapshot = withContext(Dispatchers.IO) {
                     db.collection("glucose_measurements")
                         .whereEqualTo("userId", userId)
                         .get()
-                        .await() // Await the task to get the actual QuerySnapshot
+                        .await()
                 }
 
                 measurements.clear()
                 for (document in querySnapshot.documents) {
                     val measurement = document.toObject(GlucoseMeasurement::class.java)
                     if (measurement != null) {
-                        measurement.id = document.id // Set the document ID
+                        measurement.id = document.id
                         measurements.add(measurement)
                     }
                 }
-                adapter.notifyDataSetChanged() // Notify adapter of data change
+                adapter.notifyDataSetChanged()
             } catch (exception: Exception) {
-                // Handle the error (e.g., show a toast or log the error)
+                // sth here
                 exception.printStackTrace()
             }
         }

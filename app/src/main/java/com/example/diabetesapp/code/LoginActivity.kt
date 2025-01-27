@@ -15,6 +15,9 @@ import com.example.diabetesapp.R
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 
+/**
+ * Activity for user login.
+ */
 class LoginActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var loginEmail: EditText
@@ -34,7 +37,6 @@ class LoginActivity : AppCompatActivity() {
         signupRedirectText = findViewById(R.id.signupRedirectText)
         forgotPassword = findViewById(R.id.forgot_password)
 
-
         loginButton.setOnClickListener {
             val email = loginEmail.text.toString()
             val pass = loginPassword.text.toString()
@@ -48,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
                             finish()
                         }
                         .addOnFailureListener { e: Exception ->
-                            Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Login Failed: ${e.message}", Toast.LENGTH_SHORT).show()
                         }
                 } else {
                     loginPassword.error = "Password cannot be empty"
@@ -59,32 +61,36 @@ class LoginActivity : AppCompatActivity() {
                 loginEmail.error = "Please enter a valid email"
             }
         }
+
         signupRedirectText.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
         }
 
         forgotPassword.setOnClickListener {
-            val builder = AlertDialog.Builder(this)
-            val dialogView = layoutInflater.inflate(R.layout.dialog_forgot, null)
-            val emailBox = dialogView.findViewById<EditText>(R.id.emailBox)
-            builder.setView(dialogView)
-            val dialog = builder.create()
-            dialogView.findViewById<View>(R.id.btnReset).setOnClickListener {
-                val userEmail = emailBox.text.toString()
-                if (TextUtils.isEmpty(userEmail) || !Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
-                    Toast.makeText(this, "Enter your registered email id", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-                auth.sendPasswordResetEmail(userEmail).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Toast.makeText(this, "Reset email sent", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this, "Error sending reset email", Toast.LENGTH_SHORT).show()
-                    }
+            showForgotPasswordDialog()
+        }
+    }
+
+    private fun showForgotPasswordDialog() {
+        val builder = AlertDialog.Builder(this)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_forgot, null)
+        val emailBox = dialogView.findViewById<EditText>(R.id.emailBox)
+        builder.setView(dialogView)
+        val dialog = builder.create()
+        dialogView.findViewById<View>(R.id.btnReset).setOnClickListener {
+            val userEmail = emailBox.text.toString()
+            if (TextUtils.isEmpty(userEmail) || !Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
+                Toast.makeText(this, "Enter your registered email id", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            auth.sendPasswordResetEmail(userEmail).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Reset email sent", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Error sending reset email", Toast.LENGTH_SHORT).show()
                 }
             }
-            dialog.show()
         }
-
+        dialog.show()
     }
 }

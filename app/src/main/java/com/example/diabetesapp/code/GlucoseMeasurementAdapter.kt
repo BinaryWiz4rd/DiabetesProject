@@ -7,6 +7,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diabetesapp.R
 
+/**
+ * Adapter for displaying glucose measurements in a RecyclerView.
+ *
+ * @property measurements List of glucose measurements.
+ * @property onItemClick Callback for item click events.
+ */
 class GlucoseMeasurementAdapter(
     private val measurements: List<GlucoseMeasurement>,
     private val onItemClick: (GlucoseMeasurement) -> Unit

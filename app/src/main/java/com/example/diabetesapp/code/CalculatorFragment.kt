@@ -10,6 +10,11 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.diabetesapp.R
 
+/**
+ * Fragment for calculating net carbohydrates.
+ *
+ * Website: <https://cukrowy.pl/>
+ */
 class CalculatorFragment : Fragment() {
 
     override fun onCreateView(
@@ -36,10 +41,3 @@ class CalculatorFragment : Fragment() {
         return view
     }
 }
-
-
-//https://cukrowy.pl/
-//    Od całkowitej ilości węglowodanów zawartych w 100 g produktu odejmuje się ilość błonnika
-//    pokarmowego, a następnie dzieli przez 10. Pamiętać przy tym trzeba jednak o gramaturze
-//    realnie spożywanej porcji. Jeśli zatem jest to przykładowo 200 gramów, całość trzeba
-//    przemnożyć przez 2.
