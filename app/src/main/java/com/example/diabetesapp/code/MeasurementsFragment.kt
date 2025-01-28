@@ -33,7 +33,6 @@ class MeasurementsFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = GlucoseMeasurementAdapter(measurements) { measurement ->
-            // sth here
         }
         recyclerView.adapter = adapter
         fetchMeasurements()
@@ -48,7 +47,6 @@ class MeasurementsFragment : Fragment() {
             return
         }
 
-        // launch a coroutine to fetch measurements
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val querySnapshot: QuerySnapshot = withContext(Dispatchers.IO) {
@@ -68,9 +66,28 @@ class MeasurementsFragment : Fragment() {
                 }
                 adapter.notifyDataSetChanged()
             } catch (exception: Exception) {
-                // sth here
                 exception.printStackTrace()
             }
         }
+    }
+
+    fun addGlucoseMeasurement(value: Double, time: Long) {
+        val db = FirebaseFirestore.getInstance()
+        val userId = FirebaseAuth.getInstance().currentUser ?.uid
+
+        if (userId == null) {
+            return
+        }
+
+        val measurement = GlucoseMeasurement(value = value, time = time, userId = userId)
+
+        db.collection("glucose_measurements")
+            .add(measurement)
+            .addOnSuccessListener {
+                fetchMeasurements()
+            }
+            .addOnFailureListener { e ->
+                e.printStackTrace()
+            }
     }
 }
