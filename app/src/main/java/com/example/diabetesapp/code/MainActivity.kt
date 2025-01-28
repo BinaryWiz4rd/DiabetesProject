@@ -4,6 +4,9 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -13,11 +16,9 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.diabetesapp.R
 import com.example.diabetesapp.databinding.ActivityMainBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.concurrent.TimeUnit
 
-/**
- * Main activity that serves as the entry point for the application.
- */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -45,13 +46,38 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        // schedule daily notifications
+        val fab: FloatingActionButton = findViewById(R.id.floatingActionButton)
+        fab.setOnClickListener {
+            showInputDialog()
+        }
+
         scheduleDailyNotifications()
     }
 
-    /**
-     * Replaces the current fragment with the provided fragment.
-     */
+    private fun showInputDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_add_data_point, null)
+        val glucoseInput = dialogView.findViewById<EditText>(R.id.editTextGlucose)
+        val timeInput = dialogView.findViewById<EditText>(R.id.editTextTime)
+
+        val dialogBuilder = AlertDialog.Builder(this)
+        dialogBuilder.setTitle("Add Glucose Measurement")
+            .setView(dialogView)
+            .setPositiveButton("Submit") { dialog, _ ->
+                val glucoseValue = glucoseInput.text.toString()
+                val timeValue = timeInput.text.toString()
+
+                if (glucoseValue.isNotEmpty() && timeValue.isNotEmpty()) {
+                    Toast.makeText(this, "Glucose: $glucoseValue at $timeValue", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+
+        dialogBuilder.create().show()
+    }
+
     private fun replaceFragment(fragment: Fragment) {
         val fragmentManager: FragmentManager = supportFragmentManager
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
@@ -59,18 +85,12 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
-    /**
-     * Schedules daily notifications using WorkManager.
-     */
     private fun scheduleDailyNotifications() {
         val workRequest = PeriodicWorkRequestBuilder<NotificationWorker>(1, TimeUnit.DAYS)
             .build()
         WorkManager.getInstance(this).enqueue(workRequest)
     }
 
-    /**
-     * Requests the POST_NOTIFICATIONS permission for Android 13+ and sends a notification if granted.
-     */
     private fun requestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ActivityCompat.checkSelfPermission(
@@ -78,32 +98,23 @@ class MainActivity : AppCompatActivity() {
                     Manifest.permission.POST_NOTIFICATIONS
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                // request permission
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.POST_NOTIFICATIONS),
                     PERMISSION_REQUEST_CODE
                 )
             } else {
-                // permission already granted; send a notification
                 sendReminderNotification()
             }
         } else {
-            // for older Android versions, directly send the notification
             sendReminderNotification()
         }
     }
 
-    /**
-     * Sends a reminder notification using NotificationHelper.
-     */
     private fun sendReminderNotification() {
         notificationHelper.sendNotification("Reminder", "Check your glucose levels!")
     }
 
-    /**
-     * Handles the result of the POST_NOTIFICATIONS permission request.
-     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -112,15 +123,12 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // permission granted; send a notification
                 sendReminderNotification()
-            } else {
-                // permission denied
             }
         }
     }
 
     companion object {
-        private const val PERMISSION_REQUEST_CODE = 101 // unique code for POST_NOTIFICATIONS permission
+        private const val PERMISSION_REQUEST_CODE = 101
     }
 }
