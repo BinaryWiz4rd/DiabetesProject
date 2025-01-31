@@ -54,7 +54,7 @@ class NotificationHelper(private val context: Context) {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
-        // FLAG_IMMUTABLE for Android 12+
+        // FLAG_IMMUTABLE for Android 12+ (nie dzialalo wczesniej)
         val pendingIntent = PendingIntent.getActivity(
             context,
             0,

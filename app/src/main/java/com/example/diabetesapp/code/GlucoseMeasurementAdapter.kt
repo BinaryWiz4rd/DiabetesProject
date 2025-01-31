@@ -30,13 +30,13 @@ class GlucoseMeasurementAdapter(
         val timeFormatted = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(date)
         holder.timeTextView.text = "Time: $timeFormatted"
 
-        // Set up edit and delete buttons
+        // set up edit and delete buttons
         holder.editButton.setOnClickListener {
-            onEditMeasurement(measurement)  // Call the edit callback
+            onEditMeasurement(measurement)  // call the edit callback
         }
 
         holder.deleteButton.setOnClickListener {
-            onDeleteMeasurement(measurement)  // Call the delete callback
+            onDeleteMeasurement(measurement)  // call the delete callback
         }
     }
 
