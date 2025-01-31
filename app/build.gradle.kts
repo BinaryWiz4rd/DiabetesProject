@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.play.services.maps)
     implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.recyclerview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -74,4 +75,10 @@ dependencies {
     // asynchronous programming
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
+
+    //karton
+    implementation("androidx.cardview:cardview:1.0.0")
+    implementation("com.google.android.material:material:1.9.0")
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
+
 }
