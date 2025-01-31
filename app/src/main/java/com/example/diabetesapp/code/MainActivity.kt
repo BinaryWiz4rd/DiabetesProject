@@ -1,5 +1,7 @@
 package com.example.diabetesapp.code
 
+import com.example.diabetesapp.code.HistoryFragment
+import com.example.diabetesapp.code.MeasurementsFragment
 import android.Manifest
 import android.app.TimePickerDialog
 import android.content.pm.PackageManager
@@ -101,14 +103,15 @@ class MainActivity : AppCompatActivity() {
     private fun addGlucoseMeasurement(value: Int, time: Long) {
         val fragment = supportFragmentManager.findFragmentById(R.id.frame_layout)
 
-        if (fragment is MeasurementsFragment) {
+        if (fragment is HistoryFragment) {
             fragment.addGlucoseMeasurement(value, time)
         } else {
-            replaceFragment(MeasurementsFragment())
-            val newFragment = supportFragmentManager.findFragmentById(R.id.frame_layout) as? MeasurementsFragment
-            newFragment?.addGlucoseMeasurement(value, time)
+            replaceFragment(HistoryFragment())
+            supportFragmentManager.executePendingTransactions() // Ensure the transaction completes immediately
+            (supportFragmentManager.findFragmentById(R.id.frame_layout) as? HistoryFragment)?.addGlucoseMeasurement(value, time)
         }
     }
+
 
     private fun replaceFragment(fragment: Fragment) {
         val fragmentManager: FragmentManager = supportFragmentManager
