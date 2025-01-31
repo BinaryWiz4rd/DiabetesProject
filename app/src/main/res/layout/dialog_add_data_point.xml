@@ -10,9 +10,4 @@
         android:layout_height="wrap_content"
         android:hint="Glucose Value (mg/dL)" />
 
-    <EditText
-        android:id="@+id/editTextTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Time (HH:MM)" />
 </LinearLayout>
