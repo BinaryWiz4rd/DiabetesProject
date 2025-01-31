@@ -46,22 +46,19 @@ class HistoryFragment : Fragment() {
     private fun onEditMeasurement(measurement: GlucoseMeasurement) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_update_measurement, null)
         val glucoseInput = dialogView.findViewById<EditText>(R.id.editTextGlucose)
-        val timeInput = dialogView.findViewById<EditText>(R.id.editTextTime)
 
         glucoseInput.setText(measurement.value.toString())
-        timeInput.setText(SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(measurement.time)))
 
         val dialogBuilder = AlertDialog.Builder(requireContext())
         dialogBuilder.setTitle("Edit Glucose Measurement")
             .setView(dialogView)
             .setPositiveButton("Update") { dialog, _ ->
                 val newGlucoseValue = glucoseInput.text.toString().toIntOrNull()
-                val newTime = timeInput.tag as? Long
 
-                if (newGlucoseValue != null && newTime != null) {
-                    updateMeasurement(measurement, newGlucoseValue, newTime)
+                if (newGlucoseValue != null) {
+                    updateMeasurement(measurement, newGlucoseValue)
                 } else {
-                    Toast.makeText(requireContext(), "Invalid input. Please provide valid values.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Invalid glucose value.", Toast.LENGTH_SHORT).show()
                 }
                 dialog.dismiss()
             }
@@ -83,14 +80,14 @@ class HistoryFragment : Fragment() {
             .show()
     }
 
-    private fun updateMeasurement(measurement: GlucoseMeasurement, newGlucoseValue: Int, newTime: Long) {
+    private fun updateMeasurement(measurement: GlucoseMeasurement, newGlucoseValue: Int) {
         val db = FirebaseFirestore.getInstance()
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
         db.collection("users").document(userId)
             .collection("glucose_measurements")
             .document(measurement.id)
-            .update("value", newGlucoseValue, "time", newTime)
+            .update("value", newGlucoseValue)
             .addOnSuccessListener {
                 Toast.makeText(requireContext(), "Measurement updated", Toast.LENGTH_SHORT).show()
                 fetchMeasurements()
@@ -99,6 +96,7 @@ class HistoryFragment : Fragment() {
                 Toast.makeText(requireContext(), "Failed to update: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
+
 
     private fun deleteMeasurement(measurement: GlucoseMeasurement) {
         val db = FirebaseFirestore.getInstance()
@@ -140,7 +138,20 @@ class HistoryFragment : Fragment() {
     }
 
     fun addGlucoseMeasurement(value: Int, time: Long) {
-        Toast.makeText(requireContext(), "Glucose value $value added at ${Date(time)}", Toast.LENGTH_SHORT).show()
+        val db = FirebaseFirestore.getInstance()
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val newMeasurement = GlucoseMeasurement(value = value, time = time, userId = userId)
 
+        db.collection("users").document(userId)
+            .collection("glucose_measurements")
+            .add(newMeasurement)
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Measurement added successfully!", Toast.LENGTH_SHORT).show()
+                fetchMeasurements()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "Failed to add measurement: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
+
 }

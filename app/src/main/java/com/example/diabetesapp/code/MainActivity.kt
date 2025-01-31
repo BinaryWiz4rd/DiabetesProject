@@ -61,37 +61,18 @@ class MainActivity : AppCompatActivity() {
     private fun showInputDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_data_point, null)
         val glucoseInput = dialogView.findViewById<EditText>(R.id.editTextGlucose)
-        val timeInput = dialogView.findViewById<EditText>(R.id.editTextTime)
-
-        timeInput.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val hour = calendar.get(Calendar.HOUR_OF_DAY)
-            val minute = calendar.get(Calendar.MINUTE)
-
-            val timePicker = TimePickerDialog(this, { _, selectedHour, selectedMinute ->
-                val selectedTime = Calendar.getInstance().apply {
-                    set(Calendar.HOUR_OF_DAY, selectedHour)
-                    set(Calendar.MINUTE, selectedMinute)
-                }.timeInMillis
-
-                timeInput.tag = selectedTime
-                timeInput.setText(SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(selectedTime)))
-            }, hour, minute, true)
-
-            timePicker.show()
-        }
 
         val dialogBuilder = AlertDialog.Builder(this)
         dialogBuilder.setTitle("Add Glucose Measurement")
             .setView(dialogView)
             .setPositiveButton("Submit") { dialog, _ ->
                 val glucoseValue = glucoseInput.text.toString().toIntOrNull()
-                val selectedTime = timeInput.tag as? Long
+                val currentTime = System.currentTimeMillis()
 
-                if (glucoseValue != null && selectedTime != null) {
-                    addGlucoseMeasurement(glucoseValue, selectedTime)
+                if (glucoseValue != null) {
+                    addGlucoseMeasurement(glucoseValue, currentTime)
                 } else {
-                    Toast.makeText(this, "Invalid input. Please provide valid glucose and time values.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Invalid glucose value. Please provide a valid number.", Toast.LENGTH_SHORT).show()
                 }
                 dialog.dismiss()
             }
@@ -99,6 +80,7 @@ class MainActivity : AppCompatActivity() {
 
         dialogBuilder.create().show()
     }
+
 
     private fun addGlucoseMeasurement(value: Int, time: Long) {
         val fragment = supportFragmentManager.findFragmentById(R.id.frame_layout)
