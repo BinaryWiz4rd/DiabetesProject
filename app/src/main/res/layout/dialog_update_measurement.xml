@@ -6,17 +6,16 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/input_glucose"
+        android:id="@+id/editTextGlucose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter glucose value"
+        android:hint="Glucose Value"
         android:inputType="numberDecimal" />
 
     <EditText
-        android:id="@+id/input_time"
+        android:id="@+id/editTextTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter time"
-        android:inputType="numberDecimal" />
-
+        android:hint="Time (timestamp)"
+        android:inputType="number" />
 </LinearLayout>

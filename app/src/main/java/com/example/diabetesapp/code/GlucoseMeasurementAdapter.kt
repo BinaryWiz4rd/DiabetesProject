@@ -6,38 +6,33 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diabetesapp.R
+import java.text.SimpleDateFormat
+import java.util.*
 
-/**
- * Adapter for displaying glucose measurements in a RecyclerView.
- *
- * @property measurements List of glucose measurements.
- * @property onItemClick Callback for item click events.
- */
-class GlucoseMeasurementAdapter(
-    private val measurements: List<GlucoseMeasurement>,
-    private val onItemClick: (GlucoseMeasurement) -> Unit
-) : RecyclerView.Adapter<GlucoseMeasurementAdapter.MeasurementViewHolder>() {
+class GlucoseMeasurementAdapter(private val measurementsList: List<GlucoseMeasurement>) :
+    RecyclerView.Adapter<GlucoseMeasurementAdapter.ViewHolder>() {
 
-    class MeasurementViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val glucoseValue: TextView = view.findViewById(R.id.glucose_value)
-        val timeValue: TextView = view.findViewById(R.id.time_value)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MeasurementViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_glucose_measurement, parent, false)
-        return MeasurementViewHolder(view)
+        return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: MeasurementViewHolder, position: Int) {
-        val measurement = measurements[position]
-        holder.glucoseValue.text = measurement.value.toString()
-        holder.timeValue.text = measurement.time.toString()
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val measurement = measurementsList[position]
+        holder.valueTextView.text = "Glucose: ${measurement.value} mg/dL"
 
-        holder.itemView.setOnClickListener {
-            onItemClick(measurement)
-        }
+        val date = Date(measurement.time)
+        val timeFormatted = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(date)
+        holder.timeTextView.text = "Time: $timeFormatted"
     }
 
-    override fun getItemCount() = measurements.size
+    override fun getItemCount(): Int {
+        return measurementsList.size
+    }
+
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val valueTextView: TextView = itemView.findViewById(R.id.textViewValue)
+        val timeTextView: TextView = itemView.findViewById(R.id.textViewTime)
+    }
 }
