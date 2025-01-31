@@ -138,4 +138,9 @@ class HistoryFragment : Fragment() {
                 Toast.makeText(requireContext(), "Failed to load data: $exception", Toast.LENGTH_SHORT).show()
             }
     }
+
+    fun addGlucoseMeasurement(value: Int, time: Long) {
+        Toast.makeText(requireContext(), "Glucose value $value added at ${Date(time)}", Toast.LENGTH_SHORT).show()
+
+    }
 }
