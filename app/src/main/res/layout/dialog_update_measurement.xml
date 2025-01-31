@@ -1,21 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
 
     <EditText
         android:id="@+id/editTextGlucose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Glucose Value"
-        android:inputType="numberDecimal" />
+        android:hint="Glucose Value" />
 
     <EditText
         android:id="@+id/editTextTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Time (timestamp)"
-        android:inputType="number" />
+        android:hint="Time" />
 </LinearLayout>
