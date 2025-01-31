@@ -7,12 +7,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.diabetesapp.code.GlucoseMeasurement
-import com.example.diabetesapp.code.GlucoseMeasurementAdapter
 import com.example.diabetesapp.databinding.FragmentMeasurementsBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 
 class MeasurementsFragment : Fragment() {
 
@@ -30,9 +27,16 @@ class MeasurementsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = GlucoseMeasurementAdapter(measurementsList)
+        adapter = GlucoseMeasurementAdapter(
+            measurementsList,
+            ::onEditMeasurement,
+            ::onDeleteMeasurement
+        )
+
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
+
+        fetchMeasurements()
     }
 
     fun addGlucoseMeasurement(value: Int, time: Long) {
@@ -44,8 +48,10 @@ class MeasurementsFragment : Fragment() {
         db.collection("users").document(userId)
             .collection("glucose_measurements")
             .add(measurement)
-            .addOnSuccessListener {
-                fetchMeasurements()
+            .addOnSuccessListener { documentReference ->
+                val id = documentReference.id
+                measurementsList.add(GlucoseMeasurement(value, time, userId, id))
+                adapter.notifyDataSetChanged()
                 Toast.makeText(requireContext(), "Measurement added", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { e ->
@@ -65,12 +71,34 @@ class MeasurementsFragment : Fragment() {
                 for (document in result) {
                     val value = document.getLong("value")?.toInt() ?: 0
                     val time = document.getLong("time") ?: 0
-                    measurementsList.add(GlucoseMeasurement(value, time))
+                    val id = document.id
+                    measurementsList.add(GlucoseMeasurement(value, time, userId, id))
                 }
-                adapter.notifyDataSetChanged()
+                adapter.notifyDataSetChanged()  // odwsiez
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(requireContext(), "Failed to load data: $exception", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun onEditMeasurement(measurement: GlucoseMeasurement) {
+        // dodac na edytowanie
+    }
+
+    private fun onDeleteMeasurement(measurement: GlucoseMeasurement) {
+        val db = FirebaseFirestore.getInstance()
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        db.collection("users").document(userId)
+            .collection("glucose_measurements")
+            .document(measurement.id)
+            .delete()
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Measurement deleted", Toast.LENGTH_SHORT).show()
+                fetchMeasurements()  //odswiezam
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "Failed to delete: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 }
