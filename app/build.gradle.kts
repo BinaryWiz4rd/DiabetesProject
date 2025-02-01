@@ -78,5 +78,9 @@ dependencies {
     //graph
     implementation("com.jjoe64:graphview:4.2.2")
 
+    //for MediSearch
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("com.squareup.okhttp3:okhttp-urlconnection:4.10.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
 
 }

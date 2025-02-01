@@ -1,17 +1,263 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue_dark"
-    tools:context=".code.LibraryFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/blue_light"
+    android:padding="16dp">
 
-    <TextView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Library"
-        android:gravity="center"
-        android:textSize="30sp"
-        android:textColor="@color/white"/>
+        android:fillViewport="true">
 
-</FrameLayout>
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="24dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="12dp"
+            android:backgroundTint="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/library_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Diabetes Information"
+                    android:textSize="26sp"
+                    android:textColor="@color/blue_dark"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:layout_marginBottom="24dp" />
+
+                <TextView
+                    android:id="@+id/library_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Diabetes is a chronic condition that affects how your body turns food into energy. There are different types of diabetes that require unique approaches to management."
+                    android:textSize="16sp"
+                    android:textColor="@color/blue_dark"
+                    android:fontFamily="sans-serif"
+                    android:lineSpacingExtra="4dp"
+                    android:gravity="start"
+                    android:layout_marginBottom="16dp" />
+
+                <TextView
+                    android:id="@+id/types_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Types of Diabetes"
+                    android:textSize="20sp"
+                    android:textColor="@color/blue_dark"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="start"
+                    android:layout_marginBottom="16dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:layout_marginBottom="16dp">
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_type1_diabetes"
+                        android:layout_marginEnd="16dp"/>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/type1_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Type 1 Diabetes"
+                            android:textSize="18sp"
+                            android:textColor="@color/blue_dark"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="start" />
+                        <TextView
+                            android:id="@+id/type1_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Type 1 diabetes is an autoimmune condition where the body attacks insulin-producing cells in the pancreas."
+                            android:textSize="14sp"
+                            android:textColor="@color/blue_dark"
+                            android:fontFamily="sans-serif"
+                            android:gravity="start"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:layout_marginBottom="16dp">
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_type2_diabetes"
+                        android:layout_marginEnd="16dp"/>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/type2_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Type 2 Diabetes"
+                            android:textSize="18sp"
+                            android:textColor="@color/blue_dark"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="start" />
+                        <TextView
+                            android:id="@+id/type2_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Type 2 diabetes is a condition where the body doesn’t properly use insulin or doesn’t produce enough."
+                            android:textSize="14sp"
+                            android:textColor="@color/blue_dark"
+                            android:fontFamily="sans-serif"
+                            android:gravity="start"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:layout_marginBottom="16dp">
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_mody_diabetes"
+                        android:layout_marginEnd="16dp"/>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/mada_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="MADA (Mature Onset Diabetes of the Young)"
+                            android:textSize="18sp"
+                            android:textColor="@color/blue_dark"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="start" />
+                        <TextView
+                            android:id="@+id/mada_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="MADA is a form of diabetes that is diagnosed in young adults and is similar to Type 2 diabetes."
+                            android:textSize="14sp"
+                            android:textColor="@color/blue_dark"
+                            android:fontFamily="sans-serif"
+                            android:gravity="start"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:layout_marginBottom="16dp">
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_lada_diabetes"
+                        android:layout_marginEnd="16dp"/>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/lada_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="LADA (Latent Autoimmune Diabetes in Adults)"
+                            android:textSize="18sp"
+                            android:textColor="@color/blue_dark"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="start" />
+                        <TextView
+                            android:id="@+id/lada_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="LADA is a form of Type 1 diabetes that develops later in adulthood, often misdiagnosed as Type 2."
+                            android:textSize="14sp"
+                            android:textColor="@color/blue_dark"
+                            android:fontFamily="sans-serif"
+                            android:gravity="start"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:layout_marginBottom="16dp">
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_pregnancy_diabetes"
+                        android:layout_marginEnd="16dp"/>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/pregnancy_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Gestational Diabetes"
+                            android:textSize="18sp"
+                            android:textColor="@color/blue_dark"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="start" />
+                        <TextView
+                            android:id="@+id/pregnancy_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Gestational diabetes develops during pregnancy and often resolves after birth, but it increases the risk of Type 2 diabetes later in life."
+                            android:textSize="14sp"
+                            android:textColor="@color/blue_dark"
+                            android:fontFamily="sans-serif"
+                            android:gravity="start"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/learn_more_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Learn More"
+                    android:backgroundTint="@color/blue_dark"
+                    android:textColor="@android:color/white"
+                    android:padding="16dp"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:elevation="8dp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.core.widget.NestedScrollView>
+</RelativeLayout>
