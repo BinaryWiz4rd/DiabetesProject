@@ -8,6 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="green">#8BC34A</color>
+
+
     <!--https://colorhunt.co/palette/eef5ff9eb8d97c93c3a25772-->
     <color name="blue_light">#8BADC6</color>
     <color name="blue_medium">#5F7A8D</color>
