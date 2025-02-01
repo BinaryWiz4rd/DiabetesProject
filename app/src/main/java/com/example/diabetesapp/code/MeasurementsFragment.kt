@@ -1,91 +1,95 @@
 package com.example.diabetesapp.code
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.diabetesapp.R
 import com.example.diabetesapp.databinding.FragmentMeasurementsBinding
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import com.jjoe64.graphview.helper.StaticLabelsFormatter
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.text.SimpleDateFormat
-import java.util.*
+import com.google.firebase.firestore.QuerySnapshot
 
 class MeasurementsFragment : Fragment() {
 
     private lateinit var binding: FragmentMeasurementsBinding
     private lateinit var graphView: GraphView
     private val firestore = FirebaseFirestore.getInstance()
+    private var series: LineGraphSeries<DataPoint> = LineGraphSeries()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMeasurementsBinding.inflate(inflater, container, false)
+        graphView = binding.graphView
+
+        setupGraphView()
+        listenToGlucoseMeasurements()
+
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        graphView = binding.graphView
-
-        graphView.viewport.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue_dark))
+    private fun setupGraphView() {
+        graphView.addSeries(series)
+        graphView.viewport.isXAxisBoundsManual = true
+        graphView.viewport.isYAxisBoundsManual = true
+        graphView.viewport.setMinX(0.0)
+        graphView.viewport.setMaxX(10.0)
+        graphView.viewport.setMinY(50.0)
+        graphView.viewport.setMaxY(300.0)
         graphView.viewport.isScalable = true
         graphView.viewport.isScrollable = true
-        graphView.viewport.setScalableY(true)
-        graphView.viewport.setScrollableY(true)
+    }
 
-        graphView.gridLabelRenderer.isHorizontalLabelsVisible = true
-        graphView.gridLabelRenderer.isVerticalLabelsVisible = true
-        graphView.gridLabelRenderer.setVerticalLabelsColor(ContextCompat.getColor(requireContext(), R.color.white))
-        graphView.gridLabelRenderer.setHorizontalLabelsColor(ContextCompat.getColor(requireContext(), R.color.white))
+    private fun listenToGlucoseMeasurements() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: run {
+            Toast.makeText(context, "User not authenticated.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-        firestore.collection("glucose_measurements")
-            .get()
-            .addOnSuccessListener { documents ->
-                val glucoseData = mutableListOf<DataPoint>()
-
-                for (document in documents) {
-                    val timestamp = document.getTimestamp("timestamp")?.toDate()
-                    val glucoseLevel = document.getDouble("glucose_level")
-
-                    if (timestamp != null && glucoseLevel != null) {
-                        val timeInMillis = timestamp.time
-                        glucoseData.add(DataPoint(timeInMillis.toDouble(), glucoseLevel))
-                    }
+        firestore.collection("users").document(userId)
+            .collection("glucose_measurements")
+            .orderBy("time")
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    Log.e("FirestoreError", "Error fetching data: ${e.message}", e)
+                    Toast.makeText(context, "Error fetching data: ${e.message}", Toast.LENGTH_LONG).show()
+                    return@addSnapshotListener
                 }
 
-                if (glucoseData.isNotEmpty()) {
-                    val series = LineGraphSeries(glucoseData.toTypedArray())
-                    series.color = ContextCompat.getColor(requireContext(), R.color.blue_dark) // Line color
-                    series.thickness = 5
-                    graphView.addSeries(series)
-
-                    val dateFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
-                    val labelsFormatter = StaticLabelsFormatter(graphView)
-
-                    val labels = glucoseData.map {
-                        val date = Date(it.x.toLong())
-                        dateFormatter.format(date)
-                    }
-
-                    labelsFormatter.setHorizontalLabels(labels.toTypedArray())
-                    graphView.gridLabelRenderer.labelFormatter = labelsFormatter
-
-                    graphView.viewport.setMinX(glucoseData.first().x)
-                    graphView.viewport.setMaxX(glucoseData.last().x)
-                    graphView.viewport.setMinY(glucoseData.minByOrNull { it.y }?.y ?: 0.0)
-                    graphView.viewport.setMaxY(glucoseData.maxByOrNull { it.y }?.y ?: 10.0)  // Adjust based on data
+                if (snapshots != null) {
+                    Log.d("FirestoreData", "Documents: ${snapshots.documents}")
+                    updateGraph(snapshots)
+                } else {
+                    Toast.makeText(context, "No data available.", Toast.LENGTH_SHORT).show()
                 }
             }
-            .addOnFailureListener { exception ->
-                Toast.makeText(context, "Failed to load data", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun updateGraph(snapshots: QuerySnapshot) {
+        val dataPoints = mutableListOf<DataPoint>()
+        var index = 0.0
+
+        for (document in snapshots) {
+            val value = document.getLong("value")?.toDouble()
+            if (value != null) {
+                dataPoints.add(DataPoint(index, value))
+                index++
+            } else {
+                Log.w("InvalidData", "Document ${document.id} has no valid 'value' field")
             }
+        }
+
+        if (dataPoints.isNotEmpty()) {
+            series.resetData(dataPoints.toTypedArray())
+        } else {
+            series.resetData(emptyArray())
+            Toast.makeText(context, "No valid measurements found.", Toast.LENGTH_SHORT).show()
+        }
     }
 }
