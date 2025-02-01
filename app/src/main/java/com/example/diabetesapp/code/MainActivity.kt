@@ -1,9 +1,6 @@
 package com.example.diabetesapp.code
 
-import com.example.diabetesapp.code.HistoryFragment
-import com.example.diabetesapp.code.MeasurementsFragment
 import android.Manifest
-import android.app.TimePickerDialog
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -15,13 +12,13 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.diabetesapp.R
 import com.example.diabetesapp.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.text.SimpleDateFormat
-import java.util.*
+
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -55,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             showInputDialog()
         }
 
-        scheduleDailyNotifications()
+        schedulePeriodicNotifications()
     }
 
     private fun showInputDialog() {
@@ -139,10 +136,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun scheduleDailyNotifications() {
-        val workRequest = PeriodicWorkRequestBuilder<NotificationWorker>(1, TimeUnit.DAYS)
+    private fun schedulePeriodicNotifications() {
+        //every half an hour a notification will be displayed
+        val workRequest = PeriodicWorkRequestBuilder<NotificationWorker>(30, TimeUnit.MINUTES)
             .build()
-        WorkManager.getInstance(this).enqueue(workRequest)
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "NotificationWork",
+            ExistingPeriodicWorkPolicy.REPLACE,
+            workRequest
+        )
     }
 
     companion object {
