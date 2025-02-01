@@ -1,7 +1,7 @@
 package com.example.diabetesapp.code
 
 import android.os.Bundle
-import android.util.Log
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,35 +35,44 @@ class MeasurementsFragment : Fragment() {
     }
 
     private fun setupGraphView() {
+        series.color = Color.parseColor("#FF6200EE")
+        series.thickness = 8
+        series.isDrawDataPoints = true
+        series.dataPointsRadius = 6f
+        series.setAnimated(true)
+
         graphView.addSeries(series)
-        graphView.viewport.isXAxisBoundsManual = true
+
+        val gridLabelRenderer = graphView.gridLabelRenderer
+        gridLabelRenderer.gridColor = Color.LTGRAY
+        gridLabelRenderer.isHorizontalLabelsVisible = true
+        gridLabelRenderer.isVerticalLabelsVisible = true
+        gridLabelRenderer.numHorizontalLabels = 5
+        gridLabelRenderer.numVerticalLabels = 5
+        gridLabelRenderer.textSize = 36f
+        gridLabelRenderer.verticalAxisTitle = "Glucose (mg/dL)"
+        gridLabelRenderer.horizontalAxisTitle = "Time "
+
         graphView.viewport.isYAxisBoundsManual = true
-        graphView.viewport.setMinX(0.0)
-        graphView.viewport.setMaxX(10.0)
         graphView.viewport.setMinY(50.0)
         graphView.viewport.setMaxY(300.0)
+
         graphView.viewport.isScalable = true
         graphView.viewport.isScrollable = true
     }
 
     private fun listenToGlucoseMeasurements() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: run {
-            Toast.makeText(context, "User not authenticated.", Toast.LENGTH_SHORT).show()
-            return
-        }
-
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         firestore.collection("users").document(userId)
             .collection("glucose_measurements")
             .orderBy("time")
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
-                    Log.e("FirestoreError", "Error fetching data: ${e.message}", e)
-                    Toast.makeText(context, "Error fetching data: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
                     return@addSnapshotListener
                 }
 
-                if (snapshots != null) {
-                    Log.d("FirestoreData", "Documents: ${snapshots.documents}")
+                if (snapshots != null && !snapshots.isEmpty) {
                     updateGraph(snapshots)
                 } else {
                     Toast.makeText(context, "No data available.", Toast.LENGTH_SHORT).show()
@@ -76,19 +85,14 @@ class MeasurementsFragment : Fragment() {
         var index = 0.0
 
         for (document in snapshots) {
-            val value = document.getLong("value")?.toDouble()
-            if (value != null) {
-                dataPoints.add(DataPoint(index, value))
-                index++
-            } else {
-                Log.w("InvalidData", "Document ${document.id} has no valid 'value' field")
-            }
+            val value = document.getLong("value")?.toDouble() ?: continue
+            dataPoints.add(DataPoint(index, value))
+            index++
         }
 
         if (dataPoints.isNotEmpty()) {
             series.resetData(dataPoints.toTypedArray())
         } else {
-            series.resetData(emptyArray())
             Toast.makeText(context, "No valid measurements found.", Toast.LENGTH_SHORT).show()
         }
     }
