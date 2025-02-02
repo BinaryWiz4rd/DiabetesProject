@@ -13,6 +13,9 @@ import com.example.diabetesapp.R
 /**
  * Fragment for calculating net carbohydrates.
  *
+ * This fragment allows users to input the amount of carbohydrates, fiber, and weight,
+ * and calculates the net carbohydrates based on the provided values.
+ *
  * Website: <https://cukrowy.pl/>
  */
 class CalculatorFragment : Fragment() {

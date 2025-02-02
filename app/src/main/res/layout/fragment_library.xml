@@ -42,7 +42,7 @@
                     android:id="@+id/library_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Diabetes is a chronic condition that affects how your body turns food into energy. There are different types of diabetes that require unique approaches to management."
+                    android:text="Diabetes is a disease that affects how your body uses glucose, a source of energy. "
                     android:textSize="16sp"
                     android:textColor="@color/blue_dark"
                     android:fontFamily="sans-serif"

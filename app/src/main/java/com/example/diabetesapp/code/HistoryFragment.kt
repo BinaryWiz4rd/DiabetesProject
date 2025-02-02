@@ -19,6 +19,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
+/**
+ * Fragment for displaying the history of glucose measurements.
+ *
+ * This fragment fetches and displays a list of glucose measurements from Firestore,
+ * allowing users to edit or delete measurements.
+ */
 class HistoryFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var glucoseMeasurementAdapter: GlucoseMeasurementAdapter
@@ -41,6 +47,11 @@ class HistoryFragment : Fragment() {
         return view
     }
 
+    /**
+     * Opens a dialog to edit a glucose measurement.
+     *
+     * @param measurement The measurement to be edited.
+     */
     private fun onEditMeasurement(measurement: GlucoseMeasurement) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_update_measurement, null)
         val glucoseInput = dialogView.findViewById<EditText>(R.id.editTextGlucose)
@@ -61,6 +72,11 @@ class HistoryFragment : Fragment() {
         dialogBuilder.create().show()
     }
 
+    /**
+     * Opens a confirmation dialog to delete a glucose measurement.
+     *
+     * @param measurement The measurement to be deleted.
+     */
     private fun onDeleteMeasurement(measurement: GlucoseMeasurement) {
         AlertDialog.Builder(requireContext())
             .setTitle("Delete Measurement")
@@ -74,6 +90,12 @@ class HistoryFragment : Fragment() {
             .show()
     }
 
+    /**
+     * Updates a glucose measurement in Firestore.
+     *
+     * @param measurement The measurement to be updated.
+     * @param newGlucoseValue The new glucose value to set.
+     */
     private fun updateMeasurement(measurement: GlucoseMeasurement, newGlucoseValue: Int) {
         val db = FirebaseFirestore.getInstance()
         val userId = FirebaseAuth.getInstance().currentUser ?.uid ?: return
@@ -96,6 +118,11 @@ class HistoryFragment : Fragment() {
         }
     }
 
+    /**
+     * Deletes a glucose measurement from Firestore.
+     *
+     * @param measurement The measurement to be deleted.
+     */
     private fun deleteMeasurement(measurement: GlucoseMeasurement) {
         val db = FirebaseFirestore.getInstance()
         val userId = FirebaseAuth.getInstance().currentUser ?.uid ?: return
@@ -118,6 +145,9 @@ class HistoryFragment : Fragment() {
         }
     }
 
+    /**
+     * Fetches glucose measurements from Firestore and updates the RecyclerView.
+     */
     private fun fetchMeasurements() {
         val db = FirebaseFirestore.getInstance()
         val userId = FirebaseAuth.getInstance().currentUser ?.uid ?: return
@@ -146,6 +176,12 @@ class HistoryFragment : Fragment() {
         }
     }
 
+    /**
+     * Adds a new glucose measurement to Firestore.
+     *
+     * @param value The glucose value to add.
+     * @param time The timestamp of the measurement.
+     */
     fun addGlucoseMeasurement(value: Int, time: Long) {
         val db = FirebaseFirestore.getInstance()
         val userId = FirebaseAuth.getInstance().currentUser ?.uid ?: return

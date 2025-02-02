@@ -1,6 +1,5 @@
 package com.example.diabetesapp.code
 
-
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -10,7 +9,11 @@ import android.widget.Button
 import android.widget.Toast
 import com.example.diabetesapp.R
 
-
+/**
+ * Fragment for displaying library information.
+ *
+ * This fragment contains a button that provides additional information when clicked.
+ */
 class LibraryFragment : Fragment() {
 
     override fun onCreateView(
