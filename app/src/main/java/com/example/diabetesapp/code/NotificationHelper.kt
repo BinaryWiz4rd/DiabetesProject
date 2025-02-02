@@ -17,8 +17,10 @@ import com.example.diabetesapp.R
  * Helper class to manage notifications for the Diabetes App.
  *
  * This class handles:
- * - Creating notification channels for Android 8.0+.
- * - Sending notifications with permission checks for Android 13+.
+ * - Creating notification channels for Android 8.0 and above.
+ * - Sending notifications with permission checks for Android 13 and above.
+ *
+ * @property context The context in which the notifications will be sent.
  */
 class NotificationHelper(private val context: Context) {
 
@@ -54,7 +56,7 @@ class NotificationHelper(private val context: Context) {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
-        // FLAG_IMMUTABLE for Android 12+ (nie dzialalo wczesniej)
+        // FLAG_IMMUTABLE for Android 12 and above (it didn't work without it)
         val pendingIntent = PendingIntent.getActivity(
             context,
             0,
@@ -62,25 +64,21 @@ class NotificationHelper(private val context: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        // build the notification
         val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification) // ensure this icon exists in resources
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
-        // check notification permissions for Android 13+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
             != PackageManager.PERMISSION_GRANTED
         ) {
-            // if permissions are not granted, exit without sending the notification
             return
         }
 
-        // send the notification
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
     }
@@ -88,6 +86,6 @@ class NotificationHelper(private val context: Context) {
     companion object {
         private const val CHANNEL_ID = "diabetes_notifications"
         private const val CHANNEL_NAME = "Diabetes Notifications"
-        private const val NOTIFICATION_ID = 100 // unique ID for notifications
+        private const val NOTIFICATION_ID = 100 // unique id for notifications
     }
 }

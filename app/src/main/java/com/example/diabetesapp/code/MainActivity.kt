@@ -23,6 +23,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import java.util.concurrent.TimeUnit
 
+/**
+ * Main activity of the Diabetes App.
+ *
+ * This activity serves as the main entry point for the app, allowing users to navigate
+ * between different fragments and manage their glucose measurements.
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -56,7 +62,6 @@ class MainActivity : AppCompatActivity() {
 
         schedulePeriodicNotifications()
 
-        // Setup logout button
         val logoutButton: Button = findViewById(R.id.logoutButton)
         logoutButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
@@ -67,6 +72,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Displays a dialog for adding a glucose measurement.
+     */
     private fun showInputDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_data_point, null)
         val glucoseInput = dialogView.findViewById<EditText>(R.id.editTextGlucose)
@@ -90,6 +98,12 @@ class MainActivity : AppCompatActivity() {
         dialogBuilder.create().show()
     }
 
+    /**
+     * Adds a glucose measurement to the HistoryFragment.
+     *
+     * @param value The glucose value to add.
+     * @param time The timestamp of the measurement.
+     */
     private fun addGlucoseMeasurement(value: Int, time: Long) {
         val fragment = supportFragmentManager.findFragmentById(R.id.frame_layout) as? HistoryFragment
         if (fragment != null) {
@@ -101,7 +115,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+    /**
+     * Replaces the current fragment with the specified fragment.
+     *
+     * @param fragment The fragment to display.
+     */
     private fun replaceFragment(fragment: Fragment) {
         val fragmentManager: FragmentManager = supportFragmentManager
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
@@ -109,6 +127,9 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
+    /**
+     * Requests notification permission for Android 13 and above.
+     */
     private fun requestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ActivityCompat.checkSelfPermission(
@@ -129,6 +150,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Sends a reminder notification to the user.
+     */
     private fun sendReminderNotification() {
         notificationHelper.sendNotification("Reminder", "Check your glucose levels!")
     }
@@ -146,8 +170,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Schedules periodic notifications to remind the user to check their glucose levels.
+     */
     private fun schedulePeriodicNotifications() {
-        //every half an hour a notification will be displayed
         val workRequest = PeriodicWorkRequestBuilder<NotificationWorker>(30, TimeUnit.MINUTES)
             .build()
 

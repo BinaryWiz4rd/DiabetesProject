@@ -16,11 +16,13 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
+/**
+ * Fragment for displaying glucose measurements in a graph.
+ *
+ * This fragment fetches glucose measurements from Firestore and displays them
+ * in a line graph, allowing users to visualize their glucose levels over time.
+ */
 class MeasurementsFragment : Fragment() {
     private lateinit var binding: FragmentMeasurementsBinding
     private lateinit var graphView: GraphView
@@ -37,6 +39,9 @@ class MeasurementsFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Sets up the graph view with appropriate settings.
+     */
     private fun setupGraphView() {
         series.color = ContextCompat.getColor(requireContext(), R.color.blue_dark)
         series.thickness = 6
@@ -51,7 +56,7 @@ class MeasurementsFragment : Fragment() {
         gridLabelRenderer.numVerticalLabels = 7
         gridLabelRenderer.textSize = 36f
         gridLabelRenderer.verticalAxisTitle = "Glucose (mg/dL)"
-        gridLabelRenderer.horizontalAxisTitle = "Time "
+        gridLabelRenderer.horizontalAxisTitle = "Measurement (number)"
         graphView.viewport.isYAxisBoundsManual = true
         graphView.viewport.setMinY(0.0)
         graphView.viewport.setMaxY(350.0)
@@ -62,6 +67,9 @@ class MeasurementsFragment : Fragment() {
         graphView.viewport.isScrollable = true
     }
 
+    /**
+     * Listens for changes in glucose measurements from Firestore.
+     */
     private fun listenToGlucoseMeasurements() {
         val userId = FirebaseAuth.getInstance().currentUser ?.uid ?: return
         firestore.collection("users").document(userId)
@@ -80,6 +88,11 @@ class MeasurementsFragment : Fragment() {
             }
     }
 
+    /**
+     * Updates the graph with new data points from Firestore.
+     *
+     * @param snapshots The snapshot of glucose measurements.
+     */
     private fun updateGraph(snapshots: QuerySnapshot) {
         val dataPoints = mutableListOf<DataPoint>()
         var latestValue: Double? = null
@@ -98,6 +111,11 @@ class MeasurementsFragment : Fragment() {
         }
     }
 
+    /**
+     * Displays the latest glucose value on the screen.
+     *
+     * @param value The latest glucose value to display.
+     */
     private fun displayLatestGlucoseValue(value: Double) {
         if (isAdded) {
             binding.glucoseValue.text = String.format("%.0f mg/dL", value)
@@ -108,6 +126,11 @@ class MeasurementsFragment : Fragment() {
         }
     }
 
+    /**
+     * Shows a toast message to the user.
+     *
+     * @param message The message to display.
+     */
     private fun showToast(message: String) {
         if (isAdded) {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

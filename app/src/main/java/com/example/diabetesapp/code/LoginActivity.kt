@@ -17,6 +17,9 @@ import com.google.firebase.auth.FirebaseAuth
 
 /**
  * Activity for user login.
+ *
+ * This activity allows users to log in using their email and password.
+ * It also provides options for signing up and resetting the password.
  */
 class LoginActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -71,6 +74,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Displays a dialog for resetting the password.
+     */
     private fun showForgotPasswordDialog() {
         val builder = AlertDialog.Builder(this)
         val dialogView = layoutInflater.inflate(R.layout.dialog_forgot, null)

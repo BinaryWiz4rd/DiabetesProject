@@ -10,6 +10,13 @@ import com.example.diabetesapp.R
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Adapter for displaying a list of glucose measurements in a RecyclerView.
+ *
+ * @property measurementsList The list of glucose measurements to display.
+ * @property onEditMeasurement Callback function to handle editing a measurement.
+ * @property onDeleteMeasurement Callback function to handle deleting a measurement.
+ */
 class GlucoseMeasurementAdapter(
     private val measurementsList: List<GlucoseMeasurement>,
     private val onEditMeasurement: (GlucoseMeasurement) -> Unit,
@@ -30,13 +37,12 @@ class GlucoseMeasurementAdapter(
         val timeFormatted = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(date)
         holder.timeTextView.text = "Time: $timeFormatted"
 
-        // set up edit and delete buttons
         holder.editButton.setOnClickListener {
-            onEditMeasurement(measurement)  // call the edit callback
+            onEditMeasurement(measurement)
         }
 
         holder.deleteButton.setOnClickListener {
-            onDeleteMeasurement(measurement)  // call the delete callback
+            onDeleteMeasurement(measurement)
         }
     }
 

@@ -12,6 +12,9 @@ import com.google.firebase.auth.FirebaseAuth
 
 /**
  * Activity for user registration.
+ *
+ * This activity allows users to create a new account using their email and password.
+ * It also provides an option to redirect to the login screen.
  */
 class SignUpActivity : AppCompatActivity() {
 
