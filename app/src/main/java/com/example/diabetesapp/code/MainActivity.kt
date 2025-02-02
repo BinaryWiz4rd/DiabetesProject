@@ -1,9 +1,11 @@
 package com.example.diabetesapp.code
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -18,7 +20,7 @@ import androidx.work.WorkManager
 import com.example.diabetesapp.R
 import com.example.diabetesapp.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-
+import com.google.firebase.auth.FirebaseAuth
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -53,6 +55,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         schedulePeriodicNotifications()
+
+        // Setup logout button
+        val logoutButton: Button = findViewById(R.id.logoutButton)
+        logoutButton.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
     }
 
     private fun showInputDialog() {
@@ -78,15 +90,13 @@ class MainActivity : AppCompatActivity() {
         dialogBuilder.create().show()
     }
 
-
     private fun addGlucoseMeasurement(value: Int, time: Long) {
-        val fragment = supportFragmentManager.findFragmentById(R.id.frame_layout)
-
-        if (fragment is HistoryFragment) {
+        val fragment = supportFragmentManager.findFragmentById(R.id.frame_layout) as? HistoryFragment
+        if (fragment != null) {
             fragment.addGlucoseMeasurement(value, time)
         } else {
             replaceFragment(HistoryFragment())
-            supportFragmentManager.executePendingTransactions() // Ensure the transaction completes immediately
+            supportFragmentManager.executePendingTransactions()
             (supportFragmentManager.findFragmentById(R.id.frame_layout) as? HistoryFragment)?.addGlucoseMeasurement(value, time)
         }
     }

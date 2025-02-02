@@ -42,5 +42,13 @@
         app:layout_anchor="@id/bottomAppBar"
         app:maxImageSize="40dp"
         app:tint="@color/blue_dark" />
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:layout_gravity="end"
+        android:layout_margin="16dp" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

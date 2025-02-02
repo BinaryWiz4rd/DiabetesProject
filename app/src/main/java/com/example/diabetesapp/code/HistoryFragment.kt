@@ -13,11 +13,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.diabetesapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.text.SimpleDateFormat
-import java.util.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class HistoryFragment : Fragment() {
-
     private lateinit var recyclerView: RecyclerView
     private lateinit var glucoseMeasurementAdapter: GlucoseMeasurementAdapter
     private val measurementsList = mutableListOf<GlucoseMeasurement>()
@@ -28,33 +30,26 @@ class HistoryFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_history, container, false)
         recyclerView = view.findViewById(R.id.recyclerViewHistory)
-
         glucoseMeasurementAdapter = GlucoseMeasurementAdapter(
             measurementsList,
             ::onEditMeasurement,
             ::onDeleteMeasurement
         )
-
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = glucoseMeasurementAdapter
-
         fetchMeasurements()
-
         return view
     }
 
     private fun onEditMeasurement(measurement: GlucoseMeasurement) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_update_measurement, null)
         val glucoseInput = dialogView.findViewById<EditText>(R.id.editTextGlucose)
-
         glucoseInput.setText(measurement.value.toString())
-
         val dialogBuilder = AlertDialog.Builder(requireContext())
         dialogBuilder.setTitle("Edit Glucose Measurement")
             .setView(dialogView)
             .setPositiveButton("Update") { dialog, _ ->
                 val newGlucoseValue = glucoseInput.text.toString().toIntOrNull()
-
                 if (newGlucoseValue != null) {
                     updateMeasurement(measurement, newGlucoseValue)
                 } else {
@@ -63,7 +58,6 @@ class HistoryFragment : Fragment() {
                 dialog.dismiss()
             }
             .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
-
         dialogBuilder.create().show()
     }
 
@@ -82,47 +76,58 @@ class HistoryFragment : Fragment() {
 
     private fun updateMeasurement(measurement: GlucoseMeasurement, newGlucoseValue: Int) {
         val db = FirebaseFirestore.getInstance()
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-
-        db.collection("users").document(userId)
-            .collection("glucose_measurements")
-            .document(measurement.id)
-            .update("value", newGlucoseValue)
-            .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Measurement updated", Toast.LENGTH_SHORT).show()
-                fetchMeasurements()
+        val userId = FirebaseAuth.getInstance().currentUser ?.uid ?: return
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                db.collection("users").document(userId)
+                    .collection("glucose_measurements")
+                    .document(measurement.id)
+                    .update("value", newGlucoseValue)
+                    .await()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), "Measurement updated", Toast.LENGTH_SHORT).show()
+                    fetchMeasurements()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), "Failed to update: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(requireContext(), "Failed to update: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+        }
     }
-
 
     private fun deleteMeasurement(measurement: GlucoseMeasurement) {
         val db = FirebaseFirestore.getInstance()
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-
-        db.collection("users").document(userId)
-            .collection("glucose_measurements")
-            .document(measurement.id)
-            .delete()
-            .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Measurement deleted", Toast.LENGTH_SHORT).show()
-                fetchMeasurements()
+        val userId = FirebaseAuth.getInstance().currentUser ?.uid ?: return
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                db.collection("users").document(userId)
+                    .collection("glucose_measurements")
+                    .document(measurement.id)
+                    .delete()
+                    .await()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), "Measurement deleted", Toast.LENGTH_SHORT).show()
+                    fetchMeasurements()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), "Failed to delete: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(requireContext(), "Failed to delete: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+        }
     }
 
     private fun fetchMeasurements() {
         val db = FirebaseFirestore.getInstance()
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val userId = FirebaseAuth.getInstance().currentUser ?.uid ?: return
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val result = db.collection("users").document(userId)
+                    .collection("glucose_measurements")
+                    .get()
+                    .await()
 
-        db.collection("users").document(userId)
-            .collection("glucose_measurements")
-            .get()
-            .addOnSuccessListener { result ->
                 measurementsList.clear()
                 for (document in result) {
                     val value = document.getLong("value")?.toInt() ?: 0
@@ -130,28 +135,37 @@ class HistoryFragment : Fragment() {
                     val id = document.id
                     measurementsList.add(GlucoseMeasurement(value, time, userId, id))
                 }
-                glucoseMeasurementAdapter.notifyDataSetChanged()
+                withContext(Dispatchers.Main) {
+                    glucoseMeasurementAdapter.notifyDataSetChanged()
+                }
+            } catch (exception: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), "Failed to load data: $exception", Toast.LENGTH_SHORT).show()
+                }
             }
-            .addOnFailureListener { exception ->
-                Toast.makeText(requireContext(), "Failed to load data: $exception", Toast.LENGTH_SHORT).show()
-            }
+        }
     }
 
     fun addGlucoseMeasurement(value: Int, time: Long) {
         val db = FirebaseFirestore.getInstance()
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val userId = FirebaseAuth.getInstance().currentUser ?.uid ?: return
         val newMeasurement = GlucoseMeasurement(value = value, time = time, userId = userId)
 
-        db.collection("users").document(userId)
-            .collection("glucose_measurements")
-            .add(newMeasurement)
-            .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Measurement added successfully!", Toast.LENGTH_SHORT).show()
-                fetchMeasurements()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                db.collection("users").document(userId)
+                    .collection("glucose_measurements")
+                    .add(newMeasurement)
+                    .await()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), "Measurement added successfully!", Toast.LENGTH_SHORT).show()
+                    fetchMeasurements()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), "Failed to add measurement: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(requireContext(), "Failed to add measurement: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+        }
     }
-
 }

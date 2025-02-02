@@ -16,9 +16,12 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MeasurementsFragment : Fragment() {
-
     private lateinit var binding: FragmentMeasurementsBinding
     private lateinit var graphView: GraphView
     private val firestore = FirebaseFirestore.getInstance()
@@ -29,10 +32,8 @@ class MeasurementsFragment : Fragment() {
     ): View? {
         binding = FragmentMeasurementsBinding.inflate(inflater, container, false)
         graphView = binding.graphView
-
         setupGraphView()
         listenToGlucoseMeasurements()
-
         return binding.root
     }
 
@@ -41,9 +42,7 @@ class MeasurementsFragment : Fragment() {
         series.thickness = 6
         series.isDrawDataPoints = true
         series.dataPointsRadius = 8f
-
         graphView.addSeries(series)
-
         val gridLabelRenderer = graphView.gridLabelRenderer
         gridLabelRenderer.gridColor = Color.LTGRAY
         gridLabelRenderer.isHorizontalLabelsVisible = true
@@ -53,34 +52,30 @@ class MeasurementsFragment : Fragment() {
         gridLabelRenderer.textSize = 36f
         gridLabelRenderer.verticalAxisTitle = "Glucose (mg/dL)"
         gridLabelRenderer.horizontalAxisTitle = "Time "
-
         graphView.viewport.isYAxisBoundsManual = true
         graphView.viewport.setMinY(0.0)
         graphView.viewport.setMaxY(350.0)
-
         graphView.viewport.isXAxisBoundsManual = true
         graphView.viewport.setMinX(0.0)
         graphView.viewport.setMaxX(24.0)
-
         graphView.viewport.isScalable = true
         graphView.viewport.isScrollable = true
     }
 
     private fun listenToGlucoseMeasurements() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val userId = FirebaseAuth.getInstance().currentUser ?.uid ?: return
         firestore.collection("users").document(userId)
             .collection("glucose_measurements")
             .orderBy("time")
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
-                    Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                    showToast("Error: ${e.message}")
                     return@addSnapshotListener
                 }
-
                 if (snapshots != null && !snapshots.isEmpty) {
                     updateGraph(snapshots)
                 } else {
-                    Toast.makeText(context, "No data available.", Toast.LENGTH_SHORT).show()
+                    showToast("No data available.")
                 }
             }
     }
@@ -89,27 +84,37 @@ class MeasurementsFragment : Fragment() {
         val dataPoints = mutableListOf<DataPoint>()
         var latestValue: Double? = null
         var index = 0.0
-
         for (document in snapshots) {
             val value = document.getLong("value")?.toDouble() ?: continue
             dataPoints.add(DataPoint(index, value))
             latestValue = value
             index++
         }
-
         if (dataPoints.isNotEmpty()) {
             series.resetData(dataPoints.toTypedArray())
             latestValue?.let { displayLatestGlucoseValue(it) }
         } else {
-            Toast.makeText(context, "No valid measurements found.", Toast.LENGTH_SHORT).show()
+            showToast("No valid measurements found.")
         }
     }
 
     private fun displayLatestGlucoseValue(value: Double) {
-        binding.glucoseValue.text = String.format("%.0f mg/dL", value)
-        binding.glucoseValue.setTextColor(
-            if (value in 70.0..180.0) ContextCompat.getColor(requireContext(), R.color.green)
-            else ContextCompat.getColor(requireContext(), R.color.red)
-        )
+        if (isAdded) {
+            binding.glucoseValue.text = String.format("%.0f mg/dL", value)
+            binding.glucoseValue.setTextColor(
+                if (value in 70.0..180.0) ContextCompat.getColor(requireContext(), R.color.green)
+                else ContextCompat.getColor(requireContext(), R.color.red)
+            )
+        }
+    }
+
+    private fun showToast(message: String) {
+        if (isAdded) {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
     }
 }
