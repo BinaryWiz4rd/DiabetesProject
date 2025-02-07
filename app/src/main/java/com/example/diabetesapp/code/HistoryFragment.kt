@@ -1,9 +1,11 @@
 package com.example.diabetesapp.code
 
 import android.os.Bundle
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -18,6 +20,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
  * Fragment for displaying the history of glucose measurements.
@@ -38,13 +45,48 @@ class HistoryFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerViewHistory)
         glucoseMeasurementAdapter = GlucoseMeasurementAdapter(
             measurementsList,
-            ::onEditMeasurement,
+            ::onEditMeasurement, //referention to function
             ::onDeleteMeasurement
         )
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = glucoseMeasurementAdapter
         fetchMeasurements()
+        val exportButton: Button = view.findViewById(R.id.export_button)
+        exportButton.setOnClickListener {
+            exportMeasurementsToCSV()
+        }
         return view
+    }
+
+    private fun exportMeasurementsToCSV() {
+        val csvFileName = "glucose_measurements.csv"
+
+        if (Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED) {
+            Toast.makeText(requireContext(), "External storage not available", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val dir = requireContext().getExternalFilesDir(null)
+        val file = File(dir, csvFileName)
+
+        try {
+            val fileWriter = FileWriter(file)
+            fileWriter.append("Value,Time,User  Id,Id\n")
+
+            val dateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+
+            for (measurement in measurementsList) {
+                val formattedTime = dateFormat.format(measurement.time)
+                fileWriter.append("${measurement.value},$formattedTime,${measurement.userId},${measurement.id}\n")
+            }
+
+            fileWriter.flush()
+            fileWriter.close()
+
+            Toast.makeText(requireContext(), "Data exported to ${file.absolutePath}", Toast.LENGTH_SHORT).show()
+        } catch (e: IOException) {
+            Toast.makeText(requireContext(), "Error exporting data: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
 
     /**
